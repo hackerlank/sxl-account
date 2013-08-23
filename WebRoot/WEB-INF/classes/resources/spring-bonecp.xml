@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd ">
+	<!-- BoneCP configuration -->
+	<!-- 读取jdbc.properties配置文件 -->
+	<!-- <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> 
+		<property name="locations"> <value>classpath:jdbc.properties</value> </property> 
+		</bean> -->
+		<bean id="configproperties"
+			class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+			<property name="location" value="classpath:/resources/conf/db.properties" />
+		</bean>
+		<bean id="propertyConfigurer"
+			class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+			<property name="properties" ref="configproperties" />
+		</bean>
+		<bean id="writeSource" class="com.jolbox.bonecp.BoneCPDataSource"
+			destroy-method="close">
+			<!-- 设置数据库DRIVER . -->
+			<property name="driverClass" value="${driver}" />  
+			<!-- 设置数据库URL . -->
+			<property name="jdbcUrl" value="${writeUrl}" />
+			<!-- 设置数据库用户名 . -->
+			<property name="username" value="${writeUsername}" />
+			<!-- 设置数据库密码. -->
+			<property name="password" value="${writePassword}" />
+			<!-- 设置每个分区含有connection最大小个数。这个参数默认为0 -->
+			<property name="minConnectionsPerPartition" value="2" />
+			<!-- 设置每个分区含有connection最大个数 -->
+			<property name="maxConnectionsPerPartition" value="10" />
+			<!-- 设置分区个数 -->
+			<property name="partitionCount" value="3" />
+			<!--设置分区中的connection增长数量 -->
+			<property name="acquireIncrement" value="2" />
+			<!-- 设置连接池阀值。这个参数默认为20。如果小于0或是大于100，BoneCP将设置为20 -->
+			<property name="poolAvailabilityThreshold" value="20" />
+			<!-- 设置获取connection超时的时间。这个参数默认为Long.MAX_VALUE;单位：毫秒. -->
+			<property name="connectionTimeoutInMs" value="0" />
+
+			<!-- BoneCP线程配置参数 -->
+			<!-- 设置connection助手线程个数。这个参数默认为3。如果小于0，BoneCP将设置为3. -->
+			<property name="releaseHelperThreads" value="3" />
+			<!-- 设置statement助手线程个数。这个参数默认为3。如果小于0，BoneCP将设置为3. -->
+			<property name="statementReleaseHelperThreads" value="3" />
+			<!-- 设置测试connection的间隔时间。这个参数默认为240，单位：分钟 ,设置为0该功能失效 -->
+			<property name="idleConnectionTestPeriodInMinutes" value="240" />
+			<!-- 设置connection的空闲存活时间。这个参数默认为60，单位：分钟,设置为0该功能失效. -->
+			<property name="idleMaxAgeInMinutes" value="60" />
+
+			<!-- BoneCP可选配置参数 -->
+			<!-- 设置statement缓存个数。这个参数默认为0. -->
+			<property name="statementsCacheSize" value="0" />
+			<!-- 设置重新获取连接的次数间隔时间。这个参数默认为7000，单位：毫秒。如果小于等于0，BoneCP将设置为1000. -->
+			<property name="acquireRetryDelayInMs" value="7000" />
+			<!-- 设置重新获取连接的次数。这个参数默认为5. -->
+			<property name="acquireRetryAttempts" value="5" />
+			<!-- 设置连接池初始化功能。这个参数默认为false -->
+			<property name="lazyInit" value="false" />
+
+			<!-- BoneCP调试配置参数 -->
+			<!-- 设置是开启connection关闭情况监视器功能。这个参数默认为false -->
+			<property name="closeConnectionWatch" value="false" />
+			<!-- 设置关闭connection监视器（CloseThreadMonitor）持续多长时间. -->
+			<property name="closeConnectionWatchTimeoutInMs" value="0" />
+			<!--设置是否开启记录SQL语句功能。这个参数默认是false -->
+			<property name="logStatementsEnabled" value="false" />
+			<!-- 设置事务回放功能。这个参数默认为false. -->
+			<property name="transactionRecoveryEnabled" value="false" />
+			<!-- 设置执行SQL的超时时间。这个参数默认为0；单位：毫秒。. -->
+			<property name="queryExecuteTimeLimitInMs" value="0" />
+			<!--设置是否关闭connection跟踪功能。这个参数默认为false -->
+			<property name="disableConnectionTracking" value="false" />
+		</bean>
+
+		<bean id="readSource" class="com.jolbox.bonecp.BoneCPDataSource"
+			destroy-method="close">
+			<!-- 设置数据库DRIVER . -->
+			<property name="driverClass" value="${driver}" />  
+			<!-- 设置数据库URL . -->
+			<property name="jdbcUrl" value="${readUrl}" />
+			<!-- 设置数据库用户名 . -->
+			<property name="username" value="${readUsername}" />
+			<!-- 设置数据库密码. -->
+			<property name="password" value="${readPassword}" />
+			<!-- 设置每个分区含有connection最大小个数。这个参数默认为0 -->
+			<property name="minConnectionsPerPartition" value="2" />
+			<!-- 设置每个分区含有connection最大个数 -->
+			<property name="maxConnectionsPerPartition" value="10" />
+			<!-- 设置分区个数 -->
+			<property name="partitionCount" value="3" />
+			<!--设置分区中的connection增长数量 -->
+			<property name="acquireIncrement" value="2" />
+			<!-- 设置连接池阀值。这个参数默认为20。如果小于0或是大于100，BoneCP将设置为20 -->
+			<property name="poolAvailabilityThreshold" value="20" />
+			<!-- 设置获取connection超时的时间。这个参数默认为Long.MAX_VALUE;单位：毫秒. -->
+			<property name="connectionTimeoutInMs" value="0" />
+
+			<!-- BoneCP线程配置参数 -->
+			<!-- 设置connection助手线程个数。这个参数默认为3。如果小于0，BoneCP将设置为3. -->
+			<property name="releaseHelperThreads" value="3" />
+			<!-- 设置statement助手线程个数。这个参数默认为3。如果小于0，BoneCP将设置为3. -->
+			<property name="statementReleaseHelperThreads" value="3" />
+			<!-- 设置测试connection的间隔时间。这个参数默认为240，单位：分钟 ,设置为0该功能失效 -->
+			<property name="idleConnectionTestPeriodInMinutes" value="240" />
+			<!-- 设置connection的空闲存活时间。这个参数默认为60，单位：分钟,设置为0该功能失效. -->
+			<property name="idleMaxAgeInMinutes" value="60" />
+
+			<!-- BoneCP可选配置参数 -->
+			<!-- 设置statement缓存个数。这个参数默认为0. -->
+			<property name="statementsCacheSize" value="0" />
+			<!-- 设置重新获取连接的次数间隔时间。这个参数默认为7000，单位：毫秒。如果小于等于0，BoneCP将设置为1000. -->
+			<property name="acquireRetryDelayInMs" value="7000" />
+			<!-- 设置重新获取连接的次数。这个参数默认为5. -->
+			<property name="acquireRetryAttempts" value="5" />
+			<!-- 设置连接池初始化功能。这个参数默认为false -->
+			<property name="lazyInit" value="false" />
+
+			<!-- BoneCP调试配置参数 -->
+			<!-- 设置是开启connection关闭情况监视器功能。这个参数默认为false -->
+			<property name="closeConnectionWatch" value="false" />
+			<!-- 设置关闭connection监视器（CloseThreadMonitor）持续多长时间. -->
+			<property name="closeConnectionWatchTimeoutInMs" value="0" />
+			<!--设置是否开启记录SQL语句功能。这个参数默认是false -->
+			<property name="logStatementsEnabled" value="false" />
+			<!-- 设置事务回放功能。这个参数默认为false. -->
+			<property name="transactionRecoveryEnabled" value="false" />
+			<!-- 设置执行SQL的超时时间。这个参数默认为0；单位：毫秒。. -->
+			<property name="queryExecuteTimeLimitInMs" value="0" />
+			<!--设置是否关闭connection跟踪功能。这个参数默认为false -->
+			<property name="disableConnectionTracking" value="false" />
+		</bean>
+	</beans>
